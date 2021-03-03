@@ -3,7 +3,11 @@ import 'express-async-errors';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
-import { errorHandler, NotFoundError } from '@jitusehrawattickets/common'
+import { errorHandler, NotFoundError, currentUser } from '@jitusehrawattickets/common'
+import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
+import { indexTicketRouter } from './routes/index';
+import { updateTicketRouter } from './routes/update';
 
 const app = express();
 // Making express aware its running behind a nginx proxy
@@ -16,6 +20,13 @@ app.use(
     secure: process.env.NODE_ENV !== 'test'
   })
 );
+
+app.use(currentUser);
+
+app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 app.get('*', async (req, res) => {
   throw new NotFoundError();
