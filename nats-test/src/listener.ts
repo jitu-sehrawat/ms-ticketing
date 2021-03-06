@@ -1,4 +1,6 @@
-import nats, { Message } from 'node-nats-streaming';
+import nats from 'node-nats-streaming';
+import { TicketCreatedListener } from './events/ticket-created-listener';
+
 
 console.clear();
 
@@ -19,30 +21,7 @@ stan.on('connect', () => {
     process.exit();
   })
 
-  // Options for subscription
-  const options = stan
-    .subscriptionOptions()
-    .setDurableName(`order-service`) // Durable sub
-    .setDeliverAllAvailable() // Re-deliver missed Events
-    .setManualAckMode(true); // setting Manual ACK.
-  
-    const subscription = stan.subscribe(
-    'ticket:created',   // Event Name
-    'order-service-QG', // Queue Group and Also persist durable subscriptions
-    options
-  );
-
-  subscription.on('message', (msg: Message) => {
-    console.log('Message recieved');
-    const data = msg.getData();
-
-    if (typeof data === 'string') {
-      console.log(`Received event #${msg.getSequence()}, with data: ${data}`)
-    }
-
-    // Acknowledgment
-    msg.ack();
-  });
+  new TicketCreatedListener(stan).listen();
 }); 
 
 // Gracefull Shutdown.
