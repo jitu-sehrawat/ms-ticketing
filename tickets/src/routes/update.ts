@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError } from '@jitusehrawattickets/common';
+import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError, BadRequestError } from '@jitusehrawattickets/common';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-udpated-publisher';
@@ -20,6 +20,10 @@ router.put(
 
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
     }
 
     if (ticket.userId != req.currentUser!.id) {
