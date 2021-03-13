@@ -16,14 +16,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: jitusehrawat/client
-      context: client
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: '**/*.js'
-            dest: .
+    # - image: jitusehrawat/client
+    #   context: client
+    #   docker:
+    #     dockerfile: Dockerfile
+    #   sync:
+    #     manual:
+    #       - src: '**/*.js'
+    #         dest: .
     - image: jitusehrawat/tickets
       context: tickets
       docker:
