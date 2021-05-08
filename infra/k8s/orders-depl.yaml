@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orders-delp
+  name: orders-depl
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: orders
-          image: jitusehrawat/orders
+          image: stephengrider/orders
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

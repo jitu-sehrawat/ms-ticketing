@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payments-delp
+  name: payments-depl
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: payments
-          image: jitusehrawat/payments
+          image: stephengrider/payments
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

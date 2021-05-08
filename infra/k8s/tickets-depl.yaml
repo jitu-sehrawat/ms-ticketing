@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tickets-delp
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: tickets
-          image: jitusehrawat/tickets
+          image: stephengrider/tickets
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
