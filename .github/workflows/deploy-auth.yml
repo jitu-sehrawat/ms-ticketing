@@ -34,6 +34,21 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
       # Runs a single command using the runners shell
       - name: Push Image to dockerHub
         run: docker push jitusehrawat/auth
+        
+      # Runs a single command using the runners shell
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          
+      # Runs a single command using the runners shell
+      - name: Setting up kubeconfig context
+        run: doctl kubernetes cluster kubeconfig save ticketing
+        
+      # Runs a single command using the runners shell
+      - name: Updating the deployment to use latest image
+        run: kubectl rollout restart deployment auth-depl
