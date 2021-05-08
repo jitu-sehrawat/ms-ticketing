@@ -1,16 +1,15 @@
 # This is a basic workflow to help you get started with Actions
 
-name: deploy-manifests
+name: deploy-auth
 
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-    paths: [ 'infra/**' ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches:
+      - main
+    paths:
+      - 'auth/*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,6 +22,21 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Build images
+        run: cd auth && docker build -t jitusehrawat/auth .
+
+      # Runs a set of commands using the runners shell
+      - name: Login to Docker
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+      # Runs a single command using the runners shell
+      - name: Push Image to dockerHub
+        run: docker push jitusehrawat/auth
         
       # Runs a single command using the runners shell
       - name: Install doctl
@@ -35,5 +49,5 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save ticketing
         
       # Runs a single command using the runners shell
-      - name: Apply config files from k8s directory to digitalocean cluster
-        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
+      - name: Updating the deployment to use latest image
+        run: kubectl rollout restart deployment auth-depl
