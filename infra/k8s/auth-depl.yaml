@@ -15,6 +15,7 @@ spec:
       containers:
         - name: auth
           image: jitusehrawat/auth
+          imagePullPolicy: Always
           env:
             - name: MONGO_URI
               value: 'mongodb://auth-mongo-srv:27017/auth'
