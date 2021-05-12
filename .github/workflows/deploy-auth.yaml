@@ -47,7 +47,6 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/auth-dev:latest
           context: .
-          file: ./Dockerfile
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
